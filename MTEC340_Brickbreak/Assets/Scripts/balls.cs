@@ -2,7 +2,11 @@ using UnityEngine;
 
 public class balls : MonoBehaviour
 {
-
+	AudioSource _source;
+	[SerializeField] private AudioClip _brickHit;
+	[SerializeField] private AudioClip _die;
+	[SerializeField] private AudioClip _wallHit;
+	[SerializeField] private AudioClip _paddleHit;
     public float minY = -5.5f;
     //public float maxVelocity = 15f;
     private Rigidbody2D _rb;
@@ -14,6 +18,7 @@ public class balls : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+		_source = GetComponent<AudioSource>();
         _rb = GetComponent<Rigidbody2D>();
 		Vector2 direction = Random.insideUnitCircle.normalized;
 		_rb.AddForce(direction * _launchForce, ForceMode2D.Impulse);
@@ -23,6 +28,7 @@ public class balls : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("paddle"))
         {
+			_source.PlayOneShot(_paddleHit);
             if (!Mathf.Approximately(collision.rigidbody.linearVelocityY, 0.0f))
             {
                 //we compute direction using a weighted sum, where the weights ise a one-minus to be determined
@@ -34,6 +40,12 @@ public class balls : MonoBehaviour
 		if (collision.gameObject.CompareTag("brick"))
 		{
 			Destroy(collision.gameObject);	
+			_source.PlayOneShot(_brickHit);
+			GameBehavior.Instance.ScorePoint(0);	
+		}
+		if  (collision.gameObject.CompareTag("wall"))
+		{
+		_source.PlayOneShot(_wallHit);
 		}
     }
 
@@ -42,6 +54,7 @@ public class balls : MonoBehaviour
     {
         if (transform.position.y < minY)
         {
+			_source.PlayOneShot(_die);
             ResetBall();
         }
 
