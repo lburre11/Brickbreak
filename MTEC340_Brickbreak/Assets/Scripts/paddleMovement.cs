@@ -18,14 +18,16 @@ public class paddleMovement : MonoBehaviour
     void Update()
     {
         movement = 0.0f;
-        
-        if (Input.GetKey(LeftDirection))
+        if (GameBehavior.Instance.State == Utilities.GameState.Play)
         {
-            movement -= Speed;
-        }
-        if (Input.GetKey(RightDirection))
-        {
-            movement += Speed;
+            if (Input.GetKey(LeftDirection))
+            {
+                movement -= Speed;
+            }
+            if (Input.GetKey(RightDirection))
+            {
+                movement += Speed;
+            }
         }
     }
 
